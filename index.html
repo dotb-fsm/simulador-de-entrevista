@@ -216,10 +216,18 @@
       .then(function () { b.disabled = false; b.textContent = 'Liberar os arquivos'; });
   });
 
+  // ?previa=1 mostra o guia sem a entrada, pra revisar o texto; os arquivos continuam só com o e-mail.
+  var previa = new URLSearchParams(location.search).has('previa');
+  if (previa) {
+    $('#ola').textContent = 'Prévia do guia. Os botões de download só funcionam depois da entrada com o e-mail da compra.';
+    $('#entrada').hidden = true;
+    $('#conteudo').hidden = false;
+  }
+
   document.querySelectorAll('.baixar').forEach(function (b) {
     b.addEventListener('click', function () {
       var nome = b.dataset.arquivo, url = arquivos[nome];
-      if (!url) return;
+      if (!url) { if (previa) b.textContent = 'Na prévia não baixa: entre com o e-mail'; return; }
       var a = document.createElement('a');
       a.href = url; a.download = nome;
       document.body.appendChild(a); a.click(); a.remove();
